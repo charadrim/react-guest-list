@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+/*import React, { useState } from 'react';
 
 export default function GuestForm() {
   const [guestInfo, setGuestInfo] = useState([{ firstName: '', lastName: '' }]);
@@ -49,4 +49,4 @@ export default function GuestForm() {
       </div>
     </div>
   );
-}
+}*/
