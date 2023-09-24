@@ -1,70 +1,80 @@
 import React, { useState } from 'react';
 
-/*import GuestForm from './GuestForm';
-import GuestList from './GuestList';
-
 export default function App() {
-  const [guests, setGuests] = useState([]);
+  const [guestInfo, setGuestInfo] = useState({
+    firsName: '',
+    lastName: '',
+  });
+
+  const [guests, setGuests] = useState([
+    {
+      name: {
+        first: '',
+        last: '',
+        status: 'not attending',
+      },
+    },
+  ]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setGuestInfo({ ...guestInfo, [name]: value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // You can perform any action with the form data here, such as sending it to an API or displaying it.
+    console.log(guestInfo);
+
+    const newGuest = {
+      name: {
+        first: guestInfo.firstName,
+        last: guestInfo.lastName,
+        status: 'not attending',
+      },
+    };
+
+    setGuests([...guests, newGuest]);
+
+    setGuestInfo({ firstName: '', lastName: '' });
+  };
+
   return (
     <div>
-
-    </div>
-  );
-}*/
-
-export default function GuestForm() {
-  const [guests, setGuests] = useState([
-    { firstName: '', lastName: '', status: 'not attending' },
-  ]);
-  const [showGuest, setShowGuest] = useState(false);
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setGuests((previousGuest) => ({
-      ...previousGuest,
-      [name]: value,
-    }));
-  };
-
-  const handleBtnClick = () => {
-    event.preventDefault();
-    setShowGuest(true);
-  };
-
-  return (
-    <div className="GuestForm">
-      <h1>Guest List:</h1>
-      <div>
-        <form>
-          <label htmlFor="first-name">First Name: </label>
-          <input
-            type="text"
-            id="first-name"
-            name="firstName"
-            value={guests.firstName}
-            onChange={handleInputChange}
-          ></input>
-          <br />
-          <label htmlFor="last-name">Last Name: </label>
-          <input
-            type="text"
-            id="last-name"
-            name="lastName"
-            value={guests.lastName}
-            onChange={handleInputChange}
-          ></input>
-          <br />
-          <button onClick={handleBtnClick}>Return</button>
-        </form>
+      <h1>Guest List App:</h1>
+      <form onSubmit={handleSubmit}>
         <div>
-          {showGuest && (
-            <div>
-              <p>First Name: {guests.firstName}</p>
-
-              <p>Last Name: {guests.lastName}</p>
-            </div>
-          )}
+          <label htmlFor="firstName">First Name:</label>
+          <input
+            type="text"
+            id="firstName"
+            name="firstName"
+            value={guestInfo.firstName}
+            onChange={handleChange}
+            required
+          />
         </div>
-      </div>
+        <div>
+          <label htmlFor="lastName">Last Name:</label>
+          <input
+            type="text"
+            id="lastName"
+            name="lastName"
+            value={guestInfo.lastName}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <button type="submit">Return</button>
+      </form>
+      <h2>Guests so far:</h2>
+      <ul>
+        {guests.map((guest, index) => (
+          <li key={index}>
+            {guest.name.first} {guest.name.last} - {guest.name.status}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
