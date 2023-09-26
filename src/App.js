@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+
+const baseUrl = 'http://localhost:4000';
 
 export default function App() {
   const [guestInfo, setGuestInfo] = useState({
@@ -6,15 +8,7 @@ export default function App() {
     lastName: '',
   });
 
-  const [guests, setGuests] = useState([
-    {
-      name: {
-        first: '',
-        last: '',
-        status: 'not attending',
-      },
-    },
-  ]);
+  const [guests, setGuests] = useState([]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -24,19 +18,32 @@ export default function App() {
   const handleSubmit = (e) => {
     e.preventDefault();
     // You can perform any action with the form data here, such as sending it to an API or displaying it.
-    console.log(guestInfo);
 
     const newGuest = {
       name: {
         first: guestInfo.firstName,
         last: guestInfo.lastName,
-        status: 'not attending',
+        status: false,
       },
     };
 
     setGuests([...guests, newGuest]);
 
     setGuestInfo({ firstName: '', lastName: '' });
+  };
+
+  const toggleStatus = (index) => {
+    const updatedGuests = [...guests];
+
+    updatedGuests[index].name.status = updatedGuests[index].name.status =
+      !updatedGuests[index].name.status;
+    setGuests(updatedGuests);
+  };
+
+  const removeGuest = (index) => {
+    const updatedGuests = [...guests];
+    updatedGuests.splice(index, 1);
+    setGuests(updatedGuests);
   };
 
   return (
@@ -67,14 +74,26 @@ export default function App() {
         </div>
         <button type="submit">Return</button>
       </form>
-      <h2>Guests so far:</h2>
-      <ul>
-        {guests.map((guest, index) => (
-          <li key={index}>
-            {guest.name.first} {guest.name.last} - {guest.name.status}
-          </li>
-        ))}
-      </ul>
+      <div data-test-id="guest">
+        <h2>Guests so far:</h2>
+        <ul>
+          {guests.map((guest, index) => (
+            <li key={index}>
+              {guest.name.first} {guest.name.last} - {''}
+              <input
+                type="checkbox"
+                checked={guest.name.status}
+                onChange={() => toggleStatus(index)}
+                aria-label={`${guest.name.first} ${guest.name.last} ${
+                  guest.name.status ? 'Attending' : 'Not Attending'
+                } status`}
+              />
+              {guest.name.status ? 'Attending' : 'Not Attending'}
+              <button onClick={() => removeGuest(index)}>Remove</button>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }
